@@ -274,3 +274,155 @@ URL: http://localhost:8080/lecturers
 ✅ Search by Department (GET):
 
 GET http://localhost:8080/lecturers/search/Computer Science
+
+------------------------------------------
+
+
+# **Swagger and Actuator Integration in College Management System**
+
+## **1️⃣ What is Swagger and Why We Use It?**
+Swagger (Springdoc OpenAPI) is a tool that automatically generates API documentation and provides an interactive UI where users can test API endpoints. It helps in:
+- ✅ Understanding the available APIs, their parameters, and responses.
+- ✅ Testing API requests directly from the browser.
+- ✅ Standardizing API documentation.
+
+## **2️⃣ What is Spring Boot Actuator and Why We Use It?**
+Spring Boot Actuator provides production-ready features like monitoring and application insights. It helps in:
+- ✅ Checking if the application is running correctly.
+- ✅ Viewing performance metrics.
+- ✅ Fetching system health details.
+
+---
+
+# **How Swagger Works in the Project?**
+
+### **Step 1: Adding Dependencies in `pom.xml`**
+We added the following dependencies:
+
+| Dependency | Purpose |
+|------------|---------|
+| `springdoc-openapi-starter-webmvc-ui` | Enables Swagger UI for API documentation. |
+| `spring-boot-starter-actuator` | Enables system monitoring endpoints like `/actuator/health`. |
+
+These dependencies allow the Spring Boot project to integrate with Swagger UI and expose monitoring data.
+
+---
+
+### **Step 2: Creating Swagger Configuration Class (`SwaggerConfig.java`)**
+
+```java
+package com.college.config;
+
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
+
+@Configuration
+public class SwaggerConfig {
+
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("College Management System API")
+                        .version("1.0")
+                        .description("API Documentation for managing lecturers in the college system.")
+                        .contact(new Contact()
+                                .name("Support Team")
+                                .email("support@college.com")))
+                .servers(List.of(new Server().url("http://localhost:8080").description("Local Environment")));
+    }
+}
+```
+
+How does this configuration work?
+- @Configuration: Marks this as a Spring configuration class.
+  - @Bean public OpenAPI customOpenAPI(): Creates a custom OpenAPI configuration:
+    - title("College Management System API"): Sets API title.
+    - version("1.0"): Defines API version.
+    - description("API Documentation..."): Provides a description of the API.
+    - contact(new Contact().name("Support Team").email("support@college.com")): Defines API support contact.
+    - servers(List.of(new Server().url("http://localhost:8080").description("Local Environment")));: Specifies that the API runs on localhost:8080.
+
+### Step 3: Configuring Actuator in application.properties
+
+```
+# Enable all Actuator endpoints
+management.endpoints.web.exposure.include=*
+management.endpoint.health.show-details=always
+
+# Application Info (Visible under /actuator/info)
+info.app.name=College Management System
+info.app.description=Spring Boot application for managing lecturers
+info.app.version=1.0.0
+```
+
+How does this configuration work?
+- management.endpoints.web.exposure.include=*: Exposes all available actuator endpoints.
+- management.endpoint.health.show-details=always: Displays detailed system health information.
+- info.app.name, info.app.description, info.app.version: Defines metadata available at /actuator/info.
+
+# **How Actuator Works in the Project?**
+
+Spring Boot Actuator exposes system monitoring endpoints. Once configured, we can access:
+
+| **Endpoint**          | **URL**                                      | **Purpose**                                   |
+|----------------------|--------------------------------|-------------------------------------------|
+| **Health Check**     | `http://localhost:8080/actuator/health`  | Checks if the application is running.   |
+| **Application Info** | `http://localhost:8080/actuator/info`    | Displays metadata like app name and version. |
+| **Metrics**         | `http://localhost:8080/actuator/metrics`  | Provides performance insights.          |
+
+
+### Testing the Integration
+✅ 1. Access Swagger UI
+    URL: http://localhost:8080/swagger-ui.html
+    What it does?
+    Displays a web interface listing all API endpoints.
+    Allows users to test GET, POST, PUT, and DELETE requests.
+    Shows request parameters and responses.
+
+✅ 2. Check Actuator Endpoints:
+
+Try accessing:
+
+- Health Check: http://localhost:8080/actuator/health
+```json
+{
+  "status": "UP"
+}
+
+```
+Application Info: http://localhost:8080/actuator/info
+
+```json
+{
+  "app": {
+    "name": "College Management System",
+    "description": "Spring Boot application for managing lecturers",
+    "version": "1.0.0"
+  }
+}
+
+```
+Metrics: http://localhost:8080/actuator/metrics
+- Displays application performance data.
+
+
+### 💡 Summary: How the Flow Works?
+- 1️⃣ A request is sent to http://localhost:8080/swagger-ui.html.
+- 2️⃣ Swagger UI loads and displays all API endpoints.
+- 3️⃣ The user clicks on an endpoint (e.g., GET /lecturers/{id}).
+- 4️⃣ Swagger sends the request to the backend Spring Boot application.
+- 5️⃣ The LecturerController handles the request and retrieves data from the LecturerService.
+- 6️⃣ The LecturerService interacts with the LecturerRepository, which fetches data from the database.
+- 7️⃣ The response is displayed in Swagger UI.
+
+🚀 Actuator provides monitoring and insights into the application's health and performance!
+
+    
+
