@@ -678,6 +678,93 @@ Final Execution Flow Recap
 - Returning Response
   - The lecturer object is sent back to the client.
 
+
+
+## Qureies 
+
+```.json
+query {
+  getAllLecturers {
+    id
+    lecturerName
+    address
+    department
+    email
+    phone
+    courseHandled
+  }
+}
+
+
+
+
+query {
+  getLecturerById(id: 1) {
+    id
+    lecturerName
+    address
+    department
+    email
+    phone
+    courseHandled
+  }
+}
+```
+
+## Mutation Query
+
+
+```.json
+
+mutation {
+  createLecturer(
+    lecturerName: "John Doe"
+    address: "123 Main St, Cityville"
+    department: "Computer Science"
+    email: "john.doe@example.com"
+    phone: "1234567890"
+    courseHandled: "Data Structures"
+  ) {
+    id
+    lecturerName
+    address
+    department
+    email
+    phone
+    courseHandled
+  }
+}
+
+
+
+mutation {
+  updateLecturer(
+    id: 1
+    lecturerName: "John Doe Updated"
+    address: "456 Elm St, Townsville"
+    department: "Software Engineering"
+    email: "johndoe_updated@example.com"
+    phone: "9876543210"
+    courseHandled: "Algorithms"
+  ) {
+    id
+    lecturerName
+    address
+    department
+    email
+    phone
+    courseHandled
+  }
+}
+
+
+
+mutation {
+  deleteLecturer(id: 1)
+}
+
+
+```
 -------------------------------------------------------------------------------------------------------
 
 # Questions and Answers
