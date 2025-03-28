@@ -680,9 +680,10 @@ Final Execution Flow Recap
 
 
 
+
 ## Qureies 
 
-```.json
+```
 query {
   getAllLecturers {
     id
@@ -714,7 +715,7 @@ query {
 ## Mutation Query
 
 
-```.json
+```
 
 mutation {
   createLecturer(
